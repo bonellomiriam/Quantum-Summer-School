@@ -1,0 +1,24 @@
+import numpy as np
+from pytket.extensions.qiskit import AerStateBackend, IBMQEmulatorBackend
+from pytket import Circuit
+from qiskit import IBMQ
+
+# warm up question 1
+def build_ghz_circuit(x):
+    circ = Circuit(x)
+    circ.H(0)
+    for i in range(x-1):
+        i+=1
+        circ.CX(0, i)
+    return circ
+    
+input = int(input('Please enter the amount of qubits to be used: '))
+x = build_ghz_circuit(input)
+
+backend = AerStateBackend()
+compiled_circ = backend.get_compiled_circuit(x)
+state = backend.run_circuit(compiled_circ).get_state()
+print(state.round(5))
+
+backend = IBMQEmulatorBackend('simulator_statevector').get_state()
+print(state.round(5))
